@@ -1,3 +1,5 @@
+// server (file should probably be named server.js)
+
 var MongoClient = require('mongodb').MongoClient,
     Hapi = require('hapi');
 
@@ -56,12 +58,26 @@ server.route( [
         }
     },
 
+    // // Add new tour
+    // {
+    //     method: 'POST',
+    //     path: '/api/tours',
+    //     handler: function(request, reply) {
+    //         reply ("Adding new tour");
+    //     }
+    // },
     // Add new tour
     {
         method: 'POST',
         path: '/api/tours',
-        handler: function(request, reply) {
-            reply ("Adding new tour");
+        handler: async function(request, h) {
+
+            try {
+                // get post data via request.payload
+                const result = await collection.insertOne(request.payload).catch((err) => { throw err });
+                return request.payload;
+
+            } catch (err) { console.log(err); }
         }
     },
     // // Get a single tour
@@ -91,13 +107,33 @@ server.route( [
         }
 
     },
+    // // Update a single tour
+    // {
+    //     method: 'PUT',
+    //     path: '/api/tours/{name}',
+    //     handler: function(request, reply) {
+    //         // request.payload variables
+    //         reply ("Updating " + request.params.name);
+    //     }
+    // },
     // Update a single tour
     {
         method: 'PUT',
         path: '/api/tours/{name}',
-        handler: function(request, reply) {
+        handler: async function(request, reply) {
             // request.payload variables
-            reply ("Updating " + request.params.name);
+
+            try {
+
+                const result = await collection.updateOne({ tourName: request.params.name },
+                                        { $set: request.payload }, function(error, results) {
+                                            collection.findOne({ "tourName": request.params.name}, function(error, results) {
+                                                return results;
+                                            })
+                                        });
+
+            } catch (err) { console.log(err); }
+
         }
     },
     // Delete a single tour
@@ -132,6 +168,12 @@ MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
     // server.start(function(err) {
     //     console.log('Hapi is listening to http://localhost:8080')
     // })
-    server.start();
+
+    // server.start();
+
+    async function start_server(){ }
+
+
+    start_server();
 
 })
