@@ -30,13 +30,26 @@ server.route( [
     //     }
     // },
     {
+        // this route will accpet a url parameter and use that as it's search criteria
+        // for example: http://localhost:8080/api/tours?tourPackage=Backpack Cal
         method: 'GET',
         path: '/api/tours',
+        config: {json: { space: 2}},
         handler: async function(request, h) {
-
             try {
-                const results = await collection.find().toArray().catch((err) => { throw err });
+
+                // object to store results
+                const findObject = {};
+                // loop each url parameter key/value
+                for(var key in request.query) {
+                    // save to object
+                    findObject[key] = request.query[key];
+                }
+                // run query using those key/value pairs in the find method
+                const results = await collection.find(findObject).toArray().catch((err) => { throw err });
+                // return the results
                 return results;
+
 
             } catch (err) { console.log(err); }
 
@@ -51,13 +64,32 @@ server.route( [
             reply ("Adding new tour");
         }
     },
+    // // Get a single tour
+    // {
+    //     method: 'GET',
+    //     path: '/api/tours/{name}',
+    //     handler: function(request, reply) {
+    //         reply ("Retrieving " + request.params.name);
+    //     }
+    // },
     // Get a single tour
     {
+        // this route will accept a single url parameter for the "tourName"
+        // .findOne() is used to retrieve a single item
+        // for example: http://localhost:8080/api/tours/Big%20Sur%20Retreat
         method: 'GET',
         path: '/api/tours/{name}',
-        handler: function(request, reply) {
-            reply ("Retrieving " + request.params.name);
+        handler: async function(request, h) {
+
+            try {
+
+                const results = await collection.findOne({ "tourName": request.params.name}).catch((err) => { throw err });
+                return results;
+
+            } catch (err) { console.log(err); }
+
         }
+
     },
     // Update a single tour
     {
