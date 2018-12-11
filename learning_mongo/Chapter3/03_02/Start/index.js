@@ -1,22 +1,48 @@
 var MongoClient = require('mongodb').MongoClient,
     Hapi = require('hapi');
 
-var url = 'mongodb://localhost:27017/learning_mongo'
+// var url = 'mongodb://localhost:27017/learning_mongo'
+var url = 'mongodb://localhost:27017'
 
-var server = new Hapi.Server();
-server.connection({
-    port:8080
-})
+// var server = new Hapi.Server();
+// server.connection({
+//     port:8080
+// })
+server = new Hapi.Server({
+    host: 'localhost',
+    port: 8080
+});
+console.log('Hapi running at: ' + server.info.uri);
+
 
 server.route( [
     // Get tour list
+    // {
+    //     method: 'GET',
+    //     path: '/api/tours',
+    //     handler: function(request, reply) {
+    //         // reply ("Getting tour list!");
+    //         collection.find().toArray(function(error, tours) {
+    //             // reply(tours);
+    //             // console.log('tours',tours);
+    //             return 'testing 123';
+    //         })
+    //     }
+    // },
     {
         method: 'GET',
         path: '/api/tours',
-        handler: function(request, reply) {
-            reply ("Getting tour list!");
+        handler: async function(request, h) {
+
+            try {
+                const results = await collection.find().toArray().catch((err) => { throw err });
+                return results;
+
+            } catch (err) { console.log(err); }
+
         }
     },
+
     // Add new tour
     {
         method: 'POST',
@@ -60,10 +86,20 @@ server.route( [
     }
 ])
 
-MongoClient.connect(url, function(err, db) {
-    console.log("connected correctly to server");
+MongoClient.connect(url, {useNewUrlParser: true}, function(err, client) {
+
+    // check for connection errors
+    if (err) throw err;
+
+    // collection = client.collection('tours');
+
+    db = client.db('learning_mongo');
+
     collection = db.collection('tours');
-    server.start(function(err) {
-        console.log('Hapi is listening to http://localhost:8080')
-    })
+
+    // server.start(function(err) {
+    //     console.log('Hapi is listening to http://localhost:8080')
+    // })
+    server.start();
+
 })
