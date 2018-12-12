@@ -44,7 +44,7 @@ server.route( [
         }
     },
 
-    // // Add new tour
+    // Add new tour
     // this route will accept POST variables and submit them to the tours table
     // for example, test using Httpie
     // $ http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Downtown LA Skate" tourPrice=500 tourLength=3
@@ -74,7 +74,13 @@ server.route( [
             try {
 
                 const result = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
-                return h.response(result);
+                // console.log('result',result);
+                if(result){
+                    return h.response(result);
+                }else{
+                    return h.response().code(404);
+                }
+
 
             } catch (err) { console.log(err); }
 
