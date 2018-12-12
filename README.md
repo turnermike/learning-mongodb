@@ -1,6 +1,7 @@
 # Learning MongoDB
 [https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html](https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html?)
 
+
 ## Start Up
 
 1. Start MongoDB Daemon/Server.
@@ -16,6 +17,21 @@ node index.js
 ```
 
 
+## Testing
+
+HTTPie is a CLI HTTP client that can be used for testing API development. [https://httpie.org/](https://httpie.org/)
+
+A Simple GET request:
+```
+http http://localhost:8080/api/tours
+```
+
+A POST request using Httpie:
+```
+http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Wicked Tuna" tourPrice=500 tourLength=3
+```
+
+
 ## Helpful Links
 
 MongoClient issue:
@@ -23,6 +39,4 @@ MongoClient issue:
 
 Hapi issue:
 [https://github.com/hapijs/discuss/issues/567](https://github.com/hapijs/discuss/issues/567)
-
-
 

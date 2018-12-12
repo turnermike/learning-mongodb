@@ -17,18 +17,6 @@ console.log('Hapi running at: ' + server.info.uri);
 
 server.route( [
     // Get tour list
-    // {
-    //     method: 'GET',
-    //     path: '/api/tours',
-    //     handler: function(request, reply) {
-    //         // reply ("Getting tour list!");
-    //         collection.find().toArray(function(error, tours) {
-    //             // reply(tours);
-    //             // console.log('tours',tours);
-    //             return 'testing 123';
-    //         })
-    //     }
-    // },
     {
         // this route will accpet a url parameter and use that as it's search criteria
         // for example: http://localhost:8080/api/tours?tourPackage=Backpack Cal
@@ -56,22 +44,24 @@ server.route( [
         }
     },
 
-    // Add new tour
+    // // Add new tour
+    // this route will accept POST variables and submit them to the tours table
+    // for example, test using Httpie
+    // $ http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Wicked Tuna" tourPrice=500 tourLength=3
     {
         method: 'POST',
         path: '/api/tours',
-        handler: function(request, reply) {
-            reply ("Adding new tour");
+        handler: async function(request, h) {
+
+            try {
+                // get post data via request.payload
+                const result = await collection.insertOne(request.payload).catch((err) => { throw err });
+                return request.payload;
+
+            } catch (err) { console.log(err); }
         }
     },
-    // // Get a single tour
-    // {
-    //     method: 'GET',
-    //     path: '/api/tours/{name}',
-    //     handler: function(request, reply) {
-    //         reply ("Retrieving " + request.params.name);
-    //     }
-    // },
+
     // Get a single tour
     {
         // this route will accept a single url parameter for the "tourName"
@@ -91,6 +81,7 @@ server.route( [
         }
 
     },
+
     // Update a single tour
     {
         method: 'PUT',
