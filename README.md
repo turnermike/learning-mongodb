@@ -1,7 +1,7 @@
 # Learning MongoDB
 [https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html](https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html?)
 
-Current working file is learning_mongo/Chapter3/03_02/Start/index.js
+Working file is learning_mongo/Chapter3/03_02/Start/index.js
 
 
 ## Start Up
