@@ -47,7 +47,7 @@ server.route( [
     // // Add new tour
     // this route will accept POST variables and submit them to the tours table
     // for example, test using Httpie
-    // $ http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Wicked Tuna" tourPrice=500 tourLength=3
+    // $ http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Downtown LA Skate" tourPrice=500 tourLength=3
     {
         method: 'POST',
         path: '/api/tours',
@@ -56,7 +56,7 @@ server.route( [
             try {
                 // get post data via request.payload
                 const result = await collection.insertOne(request.payload).catch((err) => { throw err });
-                return request.payload;
+                return h.response(result);
 
             } catch (err) { console.log(err); }
         }
@@ -73,8 +73,8 @@ server.route( [
 
             try {
 
-                const results = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
-                return results;
+                const result = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
+                return h.response(result);
 
             } catch (err) { console.log(err); }
 
@@ -86,7 +86,9 @@ server.route( [
     // this route will accept a single url parameter for the "tourName"
     // and then update the record with the supplied POST data
     // if the replace parameter is equal to true, the entire record will be replace with provided data
-    // for example, test using Httpie
+    // without replace example:
+    // $ http PUT "http://localhost:8080/api/tours/Mike's Tour" tourBlurb="what what your mom"
+    // with replace example:
     // $ http PUT "http://localhost:8080/api/tours/Mike's Tour" tourBlurb="what what your mom" replace==true
     {
         method: 'PUT',
@@ -111,14 +113,15 @@ server.route( [
                     const query_result = await collection.replaceOne({ "tourName": request.params.name }, request.payload).catch((err) => { throw err });
                     const find_result = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
 
-                    return query_result;
+                    return h.response(find_result);
 
                 }
 
+                // return not yet executed, replace is false
                 const query_result = await collection.updateOne({ "tourName": request.params.name }, { $set: request.payload }).catch((err) => { throw err });
                 const find_result = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
 
-                return find_result;
+                return h.response(find_result);
 
             } catch (err) { console.log(err); }
 
@@ -126,13 +129,17 @@ server.route( [
     },
 
     // Delete a single tour
+    // this route will accept a single url parameter for the "tourName"
+    // if found that record will be deleted
+    // Hapi will then return a 204 HTTP code
+    // for example:
+    // $ http DELETE "http://localhost:8080/api/tours/Mike's Tour"
     {
         method: 'DELETE',
         path: '/api/tours/{name}',
         handler: async function(request, h) {
 
-            const result = await collection.deleteOne({ "tourName": request.params.name }).catch((err) => { throw err });
-
+            const result = await collection.deleteOne({ tourName: request.params.name }).catch((err) => { throw err });     // Note: no qoutes around index
             return h.response(result).code(204);
 
         }
