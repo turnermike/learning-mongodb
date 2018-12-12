@@ -1,6 +1,20 @@
 # Learning MongoDB
 [https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html](https://www.lynda.com/Moodle-tutorials/Welcome/573253/611674-4.html?)
 
+## Start Up
+
+1. Start MongoDB Daemon/Server.
+```mongod```
+
+2. Start MongoDB Shell in another tab.
+```mongo```
+
+3. Start Hapi Server.
+```
+cd /Users/mike/Sites/Personal/learning-mongo-db/learning_mongo/Chapter3/03_02/Start
+node index.js
+```
+
 
 ## Helpful Links
 
