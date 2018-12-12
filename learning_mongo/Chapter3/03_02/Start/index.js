@@ -73,7 +73,7 @@ server.route( [
 
             try {
 
-                const results = await collection.findOne({ "tourName": request.params.name}).catch((err) => { throw err });
+                const results = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
                 return results;
 
             } catch (err) { console.log(err); }
@@ -86,11 +86,21 @@ server.route( [
     {
         method: 'PUT',
         path: '/api/tours/{name}',
-        handler: function(request, reply) {
-            // request.payload variables
-            reply ("Updating " + request.params.name);
+        handler: async function(request, h) {
+
+            try {
+
+                // console.log('request.params.name', request.params.name);
+
+                const query_result = await collection.updateOne({ "tourName": request.params.name }, { $set: request.payload }).catch((err) => { throw err });
+                const find_result = await collection.findOne({ "tourName": request.params.name }).catch((err) => { throw err });
+                return find_result;
+
+            } catch (err) { console.log(err); }
+
         }
     },
+
     // Delete a single tour
     {
         method: 'DELETE',
