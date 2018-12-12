@@ -23,14 +23,24 @@ nodemon index.js
 
 HTTPie is a CLI HTTP client that can be used for testing API development. [https://httpie.org/](https://httpie.org/)
 
-A Simple GET request:
+Simple Get Request
 ```
 http http://localhost:8080/api/tours
 ```
 
-A POST request using Httpie:
+Make A Post Request With Data (insert)
 ```
-http POST http://localhost:8080/api/tours tourName="Mike's Tour" tourPackage="Wicked Tuna" tourPrice=500 tourLength=3
+http POST http://localhost:8080/api/tours tourName="Kirsten's Fabulous Tour" tourPackage="Fun in the sun" tourPrice=1000 tourLength=5
+```
+
+A Put Request With Parameter (update)
+```
+http PUT "http://localhost:8080/api/tours/Mike's Tour" tourBlurb="what what your mom" replace==true
+```
+
+A Delete Request
+```
+http DELETE "http://localhost:8080/api/tours/Mike's Tour"
 ```
 
 
